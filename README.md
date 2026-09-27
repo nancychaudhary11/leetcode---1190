@@ -1,34 +1,38 @@
-LeetCode 1190 - Reverse Substrings Between Each Pair of Parentheses
+# LeetCode 1190 - Reverse Substrings Between Each Pair of Parentheses
 
-Problem
+## Problem
 
-Given a string containing lowercase English letters and parentheses, reverse the strings inside every matching pair of parentheses, starting from the innermost pair. Remove all parentheses from the final answer.
+Given a string `s` that contains lowercase English letters and parentheses, reverse the strings inside each matching pair of parentheses, starting from the innermost pair.
 
-Example
+Return the final string with all parentheses removed.
 
-Input
+## Example
 
+**Input:**
+
+```text
 (u(love)i)
+```
 
-Output
+**Output:**
 
+```text
 iloveu
+```
 
-Approach
+## Approach
 
-Use a stack of StringBuilder objects.
+We use a **Stack + StringBuilder**.
 
-On (, push the current string and start a new StringBuilder.
+* When we find `(`, push the current StringBuilder into the stack and start a new StringBuilder.
+* When we find a letter, append it to the current StringBuilder.
+* When we find `)`, reverse the current StringBuilder, pop the previous StringBuilder, and append the reversed string to it.
+* Continue until the complete string is formed.
 
-On a letter, append it to the current string.
+## Java Code
 
-On ), reverse the current string.
-
-Pop the previous string and append the reversed part to it.
-
-Continue until the complete string is built.
-
-Java
+```java
+import java.util.*;
 
 class Solution {
     public String reverseParentheses(String s) {
@@ -36,16 +40,21 @@ class Solution {
         StringBuilder current = new StringBuilder();
 
         for (char ch : s.toCharArray()) {
+
             if (ch == '(') {
                 stack.push(current);
                 current = new StringBuilder();
-            } 
+            }
+
             else if (ch == ')') {
                 StringBuilder previous = stack.pop();
+
                 current.reverse();
+
                 previous.append(current);
                 current = previous;
-            } 
+            }
+
             else {
                 current.append(ch);
             }
@@ -54,42 +63,55 @@ class Solution {
         return current.toString();
     }
 }
+```
 
-Dry Run
+## Dry Run
 
-For (u(love)i):
+Input:
 
-( → push ""
+```text
+(u(love)i)
+```
 
-u → u
+1. `(` → push `""`
+2. `u` → current = `"u"`
+3. `(` → push `"u"`
+4. `love` → current = `"love"`
+5. `)` → reverse `"love"` → `"evol"`
+6. Append to `"u"` → `"uevol"`
+7. `i` → `"uevoli"`
+8. `)` → reverse `"uevoli"` → `"iloveu"`
 
-( → push u
+**Final Answer:**
 
-love → love
+```text
+iloveu
+```
 
-) → reverse love → evol, attach to u → uevol
+## Key Concept
 
-i → uevoli
+```text
+'('     → PUSH previous string
+letter  → APPEND
+')'     → REVERSE + POP + APPEND
+```
 
-) → reverse → iloveu
+The innermost parentheses are processed first because they close first.
 
-Complexity
+## Complexity
 
-Time: O(n²) worst case due to repeated reversals.
+* **Time:** O(n²) in the worst case
+* **Space:** O(n)
 
-Space: O(n).
+## Topics
 
-Key Concept
+* Stack
+* StringBuilder
+* String Manipulation
+* Parentheses
+* Simulation
 
-Opening bracket → save the previous string.
-Closing bracket → reverse the current string and attach it to the previous string.
+## LeetCode
 
-Topic
-
-Stack
-
-StringBuilder
-
-String Manipulation
-
-Parentheses
+**Problem:** 1190. Reverse Substrings Between Each Pair of Parentheses
+**Language:** Java
